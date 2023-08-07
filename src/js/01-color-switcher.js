@@ -14,11 +14,9 @@ let timerId = null;
 refs.start.addEventListener('click', startBtn);
 
 function startBtn() { 
-    const changeColor = new Promise(res => { 
         timerId = setInterval(() => {
             refs.body.style.backgroundColor = getRandomHexColor();
         }, 1000);
-    });
     refs.start.setAttribute("disabled", "");
     refs.stop.removeAttribute("disabled");
 }
