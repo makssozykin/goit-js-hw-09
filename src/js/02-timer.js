@@ -1,18 +1,19 @@
-// Описаний в документації
 import flatpickr from "flatpickr";
-// Додатковий імпорт стилів
 import "flatpickr/dist/flatpickr.min.css";
+import Notiflix from 'notiflix';
 
 const refs = {
-    days: document.querySelector("span[data-days]"),
-    hours: document.querySelector("span[data-hours]"),
-    minutes: document.querySelector("span[data-minutes]"),
-    seconds: document.querySelector("span[data-seconds]"),
-    start: document.querySelector("button[data-start]"),
+  days: document.querySelector("span[data-days]"),
+  hours: document.querySelector("span[data-hours]"),
+  minutes: document.querySelector("span[data-minutes]"),
+  seconds: document.querySelector("span[data-seconds]"),
+  startBtn: document.querySelector("button[data-start]"),
+  picker: document.getElementById('datetime-picker'),
 };
 
-refs.start.setAttribute("disabled", "");
-let ms = 0;
+let ms;
+let timerId = null;
+refs.startBtn.disabled = true;
 
 const options = {
   enableTime: true,
@@ -20,39 +21,41 @@ const options = {
   defaultDate: new Date(),
   minuteIncrement: 1,
     onClose(selectedDates) {
-        if (selectedDates.toLocaleString() >= options.defaultDate.toLocaleString()) {
-            console.log(selectedDates[0]);
-            refs.start.removeAttribute("disabled");
-            ms = Date.parse(selectedDates) - Date.parse(options.defaultDate);
-            console.log(`Differ: ${ms}`);
+        if (selectedDates[0] < new Date()) {
+            Notiflix.Report.warning("Please choose a date in the future");
         }
         else { 
-            window.alert("Please choose a date in the future");
+          refs.startBtn.disabled = false;
         }
   },
 };
 
-const day = flatpickr("#datetime-picker", options);
+flatpickr(refs.picker, options);
 
-refs.start.addEventListener('click', startBtn);
+refs.startBtn.addEventListener('click', startBtn);
 
 function startBtn() { 
-    const arr = convertMs(ms);
-    console.log(arr);
-    refs.days.textContent = arr.days;
-    refs.hours.textContent = arr.hours;
-    refs.minutes.textContent = arr.minutes;
-    refs.seconds.textContent = arr.seconds;
-    setInterval(() => { 
-        
-    }, 1000)
+  
+  timerId = setInterval(() => {
+    ms = new Date(refs.picker.value) - new Date();
+    if (ms >= 0) {
+      let arr = convertMs(ms);
+      refs.picker.disabled = true;
+      refs.days.textContent = arr.days;
+      refs.hours.textContent = arr.hours;
+      refs.minutes.textContent = arr.minutes;
+      refs.seconds.textContent = arr.seconds;
+      ms--;
+    }
+    else {
+      clearInterval(timerID);
+    }
+  }, 1000);
 
 };
 
-
-
-
 function convertMs(ms) {
+  
   // Number of milliseconds per unit of time
   const second = 1000;
   const minute = second * 60;
