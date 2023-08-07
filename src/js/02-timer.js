@@ -11,7 +11,6 @@ const refs = {
   picker: document.getElementById('datetime-picker'),
 };
 
-let ms;
 let timerId = null;
 refs.startBtn.disabled = true;
 
@@ -37,15 +36,14 @@ refs.startBtn.addEventListener('click', startBtn);
 function startBtn() { 
   
   timerId = setInterval(() => {
-    ms = new Date(refs.picker.value) - new Date();
-    if (ms >= 0) {
-      let arr = convertMs(ms);
+   const countdown = new Date(refs.picker.value) - new Date();
+    if (countdown >= 0) {
+      let arr = convertMs(countdown);
       refs.picker.disabled = true;
       refs.days.textContent = arr.days < 10 ? addLeadingZero(arr.days) : arr.days;
       refs.hours.textContent = arr.hours < 10 ? addLeadingZero(arr.hours) : arr.hours;
       refs.minutes.textContent = arr.minutes < 10 ? addLeadingZero(arr.minutes) : arr.minutes;
       refs.seconds.textContent = arr.seconds < 10 ? addLeadingZero(arr.seconds) :  arr.seconds;
-      ms--;
     }
     else {
       Notiflix.Report.info('Time end');
