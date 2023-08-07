@@ -41,10 +41,10 @@ function startBtn() {
     if (ms >= 0) {
       let arr = convertMs(ms);
       refs.picker.disabled = true;
-      refs.days.textContent = arr.days < 10 || arr.days > 99 ? '0' + arr.days : arr.days;
-      refs.hours.textContent = arr.hours < 10 ? '0' + arr.hours : arr.hours;
-      refs.minutes.textContent = arr.minutes < 10 ? '0' + arr.minutes : arr.minutes;
-      refs.seconds.textContent = arr.seconds < 10 ? '0' + arr.seconds : arr.seconds;
+      refs.days.textContent = arr.days < 10 ? addLeadingZero(arr.days) : arr.days;
+      refs.hours.textContent = arr.hours < 10 ? addLeadingZero(arr.hours) : arr.hours;
+      refs.minutes.textContent = arr.minutes < 10 ? addLeadingZero(arr.minutes) : arr.minutes;
+      refs.seconds.textContent = arr.seconds < 10 ? addLeadingZero(arr.seconds) :  arr.seconds;
       ms--;
     }
     else {
@@ -79,4 +79,7 @@ function convertMs(ms) {
   return { days, hours, minutes, seconds };
 }
 
+function addLeadingZero(value) {  
+    return value.toString().padStart(2, "0");
+  }
 
